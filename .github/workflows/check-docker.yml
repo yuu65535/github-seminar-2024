@@ -65,6 +65,16 @@ jobs:
           use-cross: ${{ matrix.use_cross }}
           command: build
           args: --release --target ${{ matrix.target }} --manifest-path check-docker/Cargo.toml
+      - name: rename artifact
+        run: mv check-docker/target/${{ matrix.target }}/release/check-docker${{ matrix.extension }} check-docker/${{ matrix.asset_name }}${{ matrix.extension }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: |
+            check-docker/${{ matrix.asset_name }}${{ matrix.extension }}
+
 
 
 # steps:
