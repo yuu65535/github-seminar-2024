@@ -4,77 +4,76 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'check-docker/**'
   workflow_dispatch:
 
 jobs:
   build:
-    name: Build binary
-    strategy:
+    name: ビルド処理
+    strategy: # ビルド処理を並列化するため、各OS/CPUアーキテクチャを準備する
       matrix:
         include:
+          # Linux x86_64
         - os: ubuntu-latest
           target: x86_64-unknown-linux-gnu
           artifact_name: check-docker
           asset_name: check-docker-x86_64-unknown-linux-gnu
           use_cross: false
+          # Linux ARM64
         - os: ubuntu-latest
           target: aarch64-unknown-linux-gnu
           artifact_name: check-docker
           asset_name: check-docker-aarch64-unknown-linux-gnu
           use_cross: true
-
+          # macOS x86_64
         - os: macos-latest
           target: x86_64-apple-darwin
           artifact_name: check-docker
           asset_name: check-docker-x86_64-apple-darwin
           use_cross: false
-
+          # macOS ARM64
         - os: macos-latest
           target: aarch64-apple-darwin
           artifact_name: check-docker
           asset_name: check-docker-aarch64-apple-darwin
           use_cross: false
-
+          # Windows x86_64
         - os: windows-latest
           target: x86_64-pc-windows-msvc
           extension: .exe
           asset_name: check-docker-x86_64-pc-windows-msvc
           use_cross: false
 
-        # - os: windows-latest-arm64
-        #   target: aarch64-pc-windows-msvc
-        #   extension: .exe
-        #   asset_name: check-docker-aarch64-pc-windows-msvc
-
-
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout repository
+      - name: ソースコードの取得
         uses: actions/checkout@v4
 
-      - name: Setup Rust
+      - name: Rust言語環境の準備
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           override: true
           target: ${{ matrix.target }}
-      - name: Cargo build
+      - name: Cargoでビルド
         uses: actions-rs/cargo@v1
         with:
           use-cross: ${{ matrix.use_cross }}
           command: build
           args: --release --target ${{ matrix.target }} --manifest-path check-docker/Cargo.toml
-      - name: rename artifact
+      - name: 生成物の名前の変更と移動、公開準備
+          # Windowsの場合は拡張子を変更、ファイル名は重複しないようにする
         run: mv check-docker/target/${{ matrix.target }}/release/check-docker${{ matrix.extension }} check-docker/${{ matrix.asset_name }}${{ matrix.extension }}
-      - name: Create Tag
+      - name: 公開用にタグを付与
         id: create_tag
         run: |
           echo "::set-output name=TAG_NAME::v0.1.${{ github.run_number }}"
           git tag $TAG_NAME
           git push origin $TAG_NAME
 
-      - name: Release
+      - name: 公開(Release)の作成、前述の準備していた生成物達を使用
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -85,13 +84,3 @@ jobs:
 
 
 
-# steps:
-# - name: Checkout repository
-#   uses: actions/checkout@v4
-
-# # Rust環境の構築
-# - name: Rust環境の構築
-#   uses: actions-rs/toolchain@v1
-#   with:
-#     toolchain: stable
-#     override: true

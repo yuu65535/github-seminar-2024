@@ -4,23 +4,25 @@ on:
     push:
         branches:
             - main
+        paths:
+            - 'check-docker/**'
     workflow_dispatch:
 
 jobs:
     build:
-        name: Build binary
+        name: コンパイル
         runs-on: ubuntu-latest
 
         steps:
-        - name: Checkout repository
+        - name: ソースコードを取得
           uses: actions/checkout@v4
 
-        - name: Setup Rust
+        - name: Rust言語環境の準備
           uses: actions-rs/toolchain@v1
           with:
             toolchain: stable
             override: true
-        - name: Cargo build
+        - name: Cargoを使ってビルドする
           uses: actions-rs/cargo@v1
           with:
             command: build
