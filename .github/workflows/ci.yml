@@ -1,0 +1,27 @@
+name: build
+
+on:
+    push:
+        branches:
+            - main
+    workflow_dispatch:
+
+jobs:
+    build:
+        name: Build binary
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        - name: Setup Rust
+          uses: actions-rs/toolchain@v1
+          with:
+            toolchain: stable
+            override: true
+        - name: Cargo build
+          uses: actions-rs/cargo@v1
+          with:
+            command: build
+            args: --release --manifest-path check-docker/Cargo.toml
