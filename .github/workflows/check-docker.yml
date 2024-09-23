@@ -21,22 +21,22 @@ jobs:
           artifact_name: check-docker
           asset_name: check-docker-aarch64-unknown-linux-gnu
 
-        # - os: macos-latest-x86_64
-        #   target: x86_64-apple-darwin
-        #   artifact_name: check-docker
-        #   asset_name: check-docker-x86_64-apple-darwin
-        # - os: macos-latest-arm64
-        #   target: aarch64-apple-darwin
-        #   artifact_name: check-docker
-        #   asset_name: check-docker-aarch64-apple-darwin
-        - os: windows-latest-x86_64
+        - os: macos-latest
+          target: x86_64-apple-darwin
+          artifact_name: check-docker
+          asset_name: check-docker-x86_64-apple-darwin
+        - os: macos-latest
+          target: aarch64-apple-darwin
+          artifact_name: check-docker
+          asset_name: check-docker-aarch64-apple-darwin
+        - os: windows-latest
           target: x86_64-pc-windows-msvc
           extension: .exe
           asset_name: check-docker-x86_64-pc-windows-msvc
-        - os: windows-latest-arm64
-          target: aarch64-pc-windows-msvc
-          extension: .exe
-          asset_name: check-docker-aarch64-pc-windows-msvc
+        # - os: windows-latest-arm64
+        #   target: aarch64-pc-windows-msvc
+        #   extension: .exe
+        #   asset_name: check-docker-aarch64-pc-windows-msvc
 
 
     runs-on: ${{ matrix.os }}
