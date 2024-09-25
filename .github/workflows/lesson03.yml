@@ -18,12 +18,12 @@ jobs:
         with:
           python-version: 3.12
 
-      - name: code check in lesson02
+      - name: code check in lesson03(01)
         run: |
           cd lesson03
           python test_01.py
 
-      - name: code check in lesson02(is_int_list)
+      - name: code check in lesson03(02)
         if: always()
         run: |
           cd lesson03
