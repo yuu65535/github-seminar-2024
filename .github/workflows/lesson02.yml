@@ -1,6 +1,6 @@
 on:
   push:
-    paths: "lesson01/*.py"
+    paths: "lesson02/*.py"
     branches:
       - main
 
