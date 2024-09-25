@@ -19,5 +19,11 @@ jobs:
 
       - name: code check in lesson02
         run: |
-          cd lesson02 &&
-          python typecheck.py
+          cd lesson02
+          python typecheck01.py
+
+      - name: code check in lesson02(is_int_list)
+        if: always()
+        run: |
+          cd lesson02
+          python typecheck02.py
