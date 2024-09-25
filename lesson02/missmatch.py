@@ -11,3 +11,4 @@ def is_int_list():
 
 if __name__ == "__main__":
     pass  # ここに上記関数を使うコードを書いてみる
+    #
