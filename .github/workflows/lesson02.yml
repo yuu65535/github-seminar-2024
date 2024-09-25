@@ -1,0 +1,23 @@
+on:
+  push:
+    paths: "lesson01/*.py"
+    branches:
+      - main
+
+jobs:
+  # code check
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python(3.12)
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.12
+
+      - name: code check in lesson02
+        run: |
+          cd lesson02 &&
+          python typecheck.py
